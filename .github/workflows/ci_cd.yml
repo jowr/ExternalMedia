@@ -208,16 +208,16 @@ jobs:
 
   build-msys:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
+    #defaults:
+    #  run:
+    #    shell: msys2 {0}
     steps:
     - uses: actions/checkout@v2
-    - uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: git mingw-w64-x86_64-toolchain
+    #- uses: msys2/setup-msys2@v2
+    #  with:
+    #    msystem: MINGW64
+    #    update: true
+    #    install: git mingw-w64-x86_64-toolchain
 
     - name: Create Build Environment
       run: |
