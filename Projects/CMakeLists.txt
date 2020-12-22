@@ -239,6 +239,19 @@ endfunction()
 
 if(ENABLE_COOLPROP)
 
+  #if(CMAKE_CL_64)
+  if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+    set(COOLPROP_BITNESS "64")
+  else()
+    set(COOLPROP_BITNESS "32")
+  endif()
+
+  if(NOT MSVC)
+    set(COOLPROP_FORCE_BITNESS "-DFORCE_BITNESS_${COOLPROP_BITNESS}=ON")
+  else()
+    set(COOLPROP_FORCE_BITNESS "-DFORCE_BITNESS_${COOLPROP_BITNESS}=OFF")
+  endif()
+
   # Download and build CoolProp as needed
   ExternalProject_Add(coolprop-download
     GIT_REPOSITORY    https://github.com/coolprop/coolprop.git
@@ -257,6 +270,7 @@ if(ENABLE_COOLPROP)
      -DCOOLPROP_DEBUG:BOOL=$<CONFIG:Debug>
      -DCOOLPROP_RELEASE:BOOL=$<CONFIG:Release>
      -DCOOLPROP_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+     ${COOLPROP_FORCE_BITNESS}
   )
 
   ExternalProject_Get_Property(coolprop-download SOURCE_DIR)
@@ -273,12 +287,6 @@ if(ENABLE_COOLPROP)
     COMMENT "Cleaning the generated files for the CoolProp builds"
   )
 
-  #if(CMAKE_CL_64)
-  if(CMAKE_SIZEOF_VOID_P MATCHES "8")
-    set(COOLPROP_BITNESS "64")
-  else()
-    set(COOLPROP_BITNESS "32")
-  endif()
   set(COOLPROP_PATH_SUFFIX "${CMAKE_SYSTEM_NAME}/${COOLPROP_BITNESS}bit_${CMAKE_CXX_COMPILER_ID}_${CMAKE_CXX_COMPILER_VERSION}")
 
   if(ADD_COOLPROP_STATIC)
