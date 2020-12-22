@@ -7,13 +7,13 @@ computing fluid properties to Modelica.Media-compatible component models.
 
 The ExternalMedia library provides a framework for interfacing external codes
 computing fluid properties to Modelica.Media-compatible component models. It is
-compatible with Modelica Standard Library v 3.2, 3.2.1, and 3.2.2.
+compatible with Modelica Standard Library v 3.2, 3.2.1, 3.2.2 and 3.2.3.
 
 The current version of the library supports pure and pseudo-pure fluids models,
 possibly two-phase, compliant with the
 Modelica.Media.Interfaces.PartialTwoPhaseMedium interface.
 
-The current release of the library (3.2.1) includes a pre-compiled interface to
+The current release of the library (3.2.3) includes a pre-compiled interface to
 the [FluidProp](http://www.asimptote.nl/software/fluidprop) software and
 built-in access to [CoolProp](http://www.coolprop.org).
 If you use the FluidProp software, you need to have the proper licenses to
@@ -34,7 +34,7 @@ for more info.
 
 ## Current release
 
-The last stable release is 3.2.1.
+The last stable release is 3.2.3.
 
 See the Installation.txt file for installation instructions.
 
