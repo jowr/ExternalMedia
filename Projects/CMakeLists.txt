@@ -110,6 +110,12 @@ else()
   target_compile_definitions(${LIBRARY_NAME} PRIVATE -DMODELICA_ERRORS=0)
 endif()
 
+#if(MSVC)
+# Add postfix for debugging, this breaks the Modelica code, use it carefully
+set_property(TARGET ${LIBRARY_NAME} PROPERTY DEBUG_POSTFIX d)
+set_property(TARGET ${LIBRARY_NAME} PROPERTY RELEASE_POSTFIX )
+#endif()
+
 if(WIN32)
   if(CMAKE_SIZEOF_VOID_P MATCHES "8")
     set(MODELICA_PLATFORM "win64")
@@ -132,23 +138,25 @@ else()
   message(FATAL_ERROR "Could not determine the MODELICA_PLATFORM, aborting.")
 endif()
 
+set(MODELICA_COMPILER "")
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   if    (MSVC_TOOLSET_VERSION EQUAL 80 )
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2005)
+    set(MODELICA_COMPILER vs2005)
   elseif(MSVC_TOOLSET_VERSION EQUAL 90 )
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2008)
+    set(MODELICA_COMPILER vs2008)
   elseif(MSVC_TOOLSET_VERSION EQUAL 100)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2010)
+    set(MODELICA_COMPILER vs2010)
   elseif(MSVC_TOOLSET_VERSION EQUAL 110)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2012)
+    set(MODELICA_COMPILER vs2012)
   elseif(MSVC_TOOLSET_VERSION EQUAL 120)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2013)
+    set(MODELICA_COMPILER vs2013)
   elseif(MSVC_TOOLSET_VERSION EQUAL 140)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2015)
+    set(MODELICA_COMPILER vs2015)
   elseif(MSVC_TOOLSET_VERSION EQUAL 141)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2017)
+    set(MODELICA_COMPILER vs2017)
   elseif(MSVC_TOOLSET_VERSION EQUAL 142)
-    set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/vs2019)
+    set(MODELICA_COMPILER vs2019)
   else()
     message(WARNING "${MSVC_TOOLSET_VERSION} Is not explicitly supported. Please check you build carefully.")
   endif()
@@ -156,29 +164,39 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   string(REPLACE "." ";" _VERSION_LIST ${CMAKE_CXX_COMPILER_VERSION})
   list(GET _VERSION_LIST 0 _VERSION_MAJOR)
   list(GET _VERSION_LIST 1 _VERSION_MINOR)
-  set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/gcc${_VERSION_MAJOR}${_VERSION_MINOR})
+  set(MODELICA_COMPILER gcc${_VERSION_MAJOR}${_VERSION_MINOR})
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   string(REPLACE "." ";" _VERSION_LIST ${CMAKE_CXX_COMPILER_VERSION})
   list(GET _VERSION_LIST 0 _VERSION_MAJOR)
   list(GET _VERSION_LIST 1 _VERSION_MINOR)
-  set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/clang${_VERSION_MAJOR}${_VERSION_MINOR})
+  set(MODELICA_COMPILER clang${_VERSION_MAJOR}${_VERSION_MINOR})
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
   string(REPLACE "." ";" _VERSION_LIST ${CMAKE_CXX_COMPILER_VERSION})
   list(GET _VERSION_LIST 0 _VERSION_MAJOR)
   list(GET _VERSION_LIST 1 _VERSION_MINOR)
-  set(MODELICA_PLATFORM ${MODELICA_PLATFORM}/appleclang${_VERSION_MAJOR}${_VERSION_MINOR})
+  set(MODELICA_COMPILER appleclang${_VERSION_MAJOR}${_VERSION_MINOR})
 else()
   message(WARNING "${CMAKE_CXX_COMPILER_ID} Is not explicitly supported. Please check you build carefully.")
 endif()
 
-INSTALL(TARGETS "${LIBRARY_NAME}" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/${MODELICA_PLATFORM}" )
-INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/Sources/${LIBRARY_HEADER}" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../Modelica/ExternalMedia ${APP_VERSION}/Resources/Include" )
+set(MODELICA_INSTALL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Modelica/ExternalMedia ${APP_VERSION}/Resources")
 
-#if(MSVC)
-# Add postfix for debugging, this breaks the Modelica code, use it carefully
-set_property(TARGET ${LIBRARY_NAME} PROPERTY DEBUG_POSTFIX d)
-set_property(TARGET ${LIBRARY_NAME} PROPERTY RELEASE_POSTFIX )
-#endif()
+INSTALL(TARGETS "${LIBRARY_NAME}"                                     DESTINATION "${MODELICA_INSTALL_PATH}/Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}")
+INSTALL(FILES "${CMAKE_CURRENT_SOURCE_DIR}/Sources/${LIBRARY_HEADER}" DESTINATION "${MODELICA_INSTALL_PATH}/Include")
+
+if(MODELICA_COMPILER)
+  add_custom_target(install-as-default
+      COMMAND ${CMAKE_COMMAND} -E echo "Copying \"Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}/\" to \"Library/${MODELICA_PLATFORM}/\""
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}/" "Library/${MODELICA_PLATFORM}/"
+      WORKING_DIRECTORY "${MODELICA_INSTALL_PATH}"
+      COMMENT "Install the current build as default library."
+  )
+else()
+  add_custom_target(install-as-default
+      COMMAND ${CMAKE_COMMAND} -E echo "Not copying \"Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}/\" to \"Library/${MODELICA_PLATFORM}/\""
+      COMMENT "Install the current build as default library, not needed."
+  )
+endif()
 
 
 #######################################
