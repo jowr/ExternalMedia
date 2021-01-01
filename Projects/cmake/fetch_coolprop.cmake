@@ -33,10 +33,32 @@ FetchContent_Declare(
 FetchContent_GetProperties(coolprop)
 if(NOT coolprop_POPULATED)
   FetchContent_Populate(coolprop)
+  execute_process(
+    COMMAND "\"${CMAKE_COMMAND}\" echo \"Building Coolprop\""
+    COMMAND "\"${CMAKE_COMMAND}\" --build \"${coolprop_BINARY_DIR}\" --target CoolProp"
+  )
+  #COMMAND <cmd1> [<arguments>]
+  #             [COMMAND <cmd2> [<arguments>]]...
+  #             [WORKING_DIRECTORY <directory>]
+  #             [TIMEOUT <seconds>]
+  #             [RESULT_VARIABLE <variable>]
+  #             [RESULTS_VARIABLE <variable>]
+  #             [OUTPUT_VARIABLE <variable>]
+  #             [ERROR_VARIABLE <variable>]
+  #             [INPUT_FILE <file>]
+  #             [OUTPUT_FILE <file>]
+  #             [ERROR_FILE <file>]
+  #             [OUTPUT_QUIET]
+  #             [ERROR_QUIET]
+  #             [COMMAND_ECHO <where>]
+  #             [OUTPUT_STRIP_TRAILING_WHITESPACE]
+  #             [ERROR_STRIP_TRAILING_WHITESPACE]
+  #             [ENCODING <name>]
+  #             [ECHO_OUTPUT_VARIABLE]
+  #             [ECHO_ERROR_VARIABLE]
+  #             [COMMAND_ERROR_IS_FATAL <ANY|LAST>])
   add_subdirectory(${coolprop_SOURCE_DIR} ${coolprop_BINARY_DIR})
 endif()
-
-
 
 if(ADD_COOLPROP_OBJECT)
   add_library(CoolPropLib OBJECT IMPORTED GLOBAL)
