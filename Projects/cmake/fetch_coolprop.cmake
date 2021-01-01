@@ -30,38 +30,32 @@ FetchContent_Declare(
 # will be defined and available to the rest of the build
 #FetchContent_MakeAvailable(coolprop)
 
-FetchContent_GetProperties(coolprop)
+# FetchContent_GetProperties(coolprop)
+# if(NOT coolprop_POPULATED)
+  # FetchContent_Populate(coolprop)
+  # add_subdirectory(${coolprop_SOURCE_DIR} ${coolprop_BINARY_DIR})
+# endif()
+
+# FetchContent_GetProperties(coolprop)
 if(NOT coolprop_POPULATED)
   FetchContent_Populate(coolprop)
-  execute_process(
-    COMMAND "\"${CMAKE_COMMAND}\" echo \"Building Coolprop\""
-    COMMAND "\"${CMAKE_COMMAND}\" --build \"${coolprop_BINARY_DIR}\" --target CoolProp"
-  )
-  #COMMAND <cmd1> [<arguments>]
-  #             [COMMAND <cmd2> [<arguments>]]...
-  #             [WORKING_DIRECTORY <directory>]
-  #             [TIMEOUT <seconds>]
-  #             [RESULT_VARIABLE <variable>]
-  #             [RESULTS_VARIABLE <variable>]
-  #             [OUTPUT_VARIABLE <variable>]
-  #             [ERROR_VARIABLE <variable>]
-  #             [INPUT_FILE <file>]
-  #             [OUTPUT_FILE <file>]
-  #             [ERROR_FILE <file>]
-  #             [OUTPUT_QUIET]
-  #             [ERROR_QUIET]
-  #             [COMMAND_ECHO <where>]
-  #             [OUTPUT_STRIP_TRAILING_WHITESPACE]
-  #             [ERROR_STRIP_TRAILING_WHITESPACE]
-  #             [ENCODING <name>]
-  #             [ECHO_OUTPUT_VARIABLE]
-  #             [ECHO_ERROR_VARIABLE]
-  #             [COMMAND_ERROR_IS_FATAL <ANY|LAST>])
+  if(ADD_COOLPROP_OBJECT)
+    message(STATUS "Preparing CoolProp object files in \"${coolprop_BINARY_DIR}\"")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} --build ${coolprop_BINARY_DIR} --target CoolProp --config Release
+      RESULT_VARIABLE rv
+    )
+    message("rv='${rv}'")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} --build ${coolprop_BINARY_DIR} --target CoolProp --config Debug
+      RESULT_VARIABLE rv
+    )
+    message("rv='${rv}'")
+  endif()
   add_subdirectory(${coolprop_SOURCE_DIR} ${coolprop_BINARY_DIR})
 endif()
 
-if(ADD_COOLPROP_OBJECT)
-  add_library(CoolPropLib OBJECT IMPORTED GLOBAL)
+if(ADD_COOLPROP_OBJECT)  
   list(APPEND COOLPROP_INCLUDES "${coolprop_SOURCE_DIR}")
   list(APPEND COOLPROP_INCLUDES "${coolprop_SOURCE_DIR}/include")
   list(APPEND COOLPROP_INCLUDES "${coolprop_SOURCE_DIR}/externals/msgpack-c/include")
