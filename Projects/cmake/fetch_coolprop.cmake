@@ -31,10 +31,18 @@ FetchContent_Declare(
 FetchContent_GetProperties(coolprop)
 if(NOT coolprop_POPULATED)
   FetchContent_Populate(coolprop)
+  if(ADD_COOLPROP_OBJECT)
+    message(STATUS "Preparing CoolProp object files in \"${coolprop_BINARY_DIR}\"")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -B ${coolprop_BINARY_DIR} -S ${coolprop_SOURCE_DIR}
+      RESULT_VARIABLE rv
+    )
+    message("rv='${rv}'")
+  endif()
   add_subdirectory(${coolprop_SOURCE_DIR} ${coolprop_BINARY_DIR})
 endif()
 
-if(ADD_COOLPROP_OBJECT)  
+if(ADD_COOLPROP_OBJECT)
   get_target_property(COOLPROP_INCLUDES CoolProp INCLUDE_DIRECTORIES)
   get_target_property(COOLPROP_LINKER_INPUT CoolProp SOURCES)
   set(COOLPROP_LIBRARY_FILE "")
