@@ -31,15 +31,22 @@ FetchContent_Declare(
 FetchContent_GetProperties(coolprop)
 if(NOT coolprop_POPULATED)
   FetchContent_Populate(coolprop)
-  if(ADD_COOLPROP_OBJECT)
-    message(STATUS "Preparing CoolProp object files in \"${coolprop_BINARY_DIR}\"")
-    execute_process(
-      COMMAND ${CMAKE_COMMAND} -B ${coolprop_BINARY_DIR} -S ${coolprop_SOURCE_DIR}
-      RESULT_VARIABLE rv
-    )
-    message("rv='${rv}'")
-  endif()
+  #if(ADD_COOLPROP_OBJECT)
+  #  message(STATUS "Preparing CoolProp object files in \"${coolprop_BINARY_DIR}\"")
+  #  execute_process(
+  #    COMMAND ${CMAKE_COMMAND} -B ${coolprop_BINARY_DIR} -S ${coolprop_SOURCE_DIR}
+  #    RESULT_VARIABLE rv
+  #  )
+  #  message("rv='${rv}'")
+  #endif()
   add_subdirectory(${coolprop_SOURCE_DIR} ${coolprop_BINARY_DIR})
+  #message(STATUS WARNING FATAL_ERROR "")
+endif()
+
+if(NOT DEFINED CACHE{CMAKE_RUN_SWITCH})
+  message(STATUS "This seems to be the first time you run CMake to access \"${coolprop_BINARY_DIR}\"")
+  message(STATUS "-----> Please rerun CMake manually <-----")
+  set(CMAKE_RUN_SWITCH ON CACHE BOOL "Did CMake run earlier?")
 endif()
 
 if(ADD_COOLPROP_OBJECT)
