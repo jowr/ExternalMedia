@@ -267,6 +267,7 @@ jobs:
         path: Modelica
 
   build-docs:
+    runs-on: ubuntu-latest
     steps:
     - name: build doxygen sources
       uses: mattnotmitt/doxygen-action@v1
