@@ -14,47 +14,24 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    #- name: build doxygen sources
-    #  uses: mattnotmitt/doxygen-action@v1
-    #  with:
-    #    working-directory: Projects/Sources/
-    #    doxyfile-path: ./Doxyfile
-    #    enable-latex: true
-
-    - name: create doxyfile
-      run: |
-        doxygen -g Projects/Doxyfile
-
     - name: build doxygen sources
       uses: mattnotmitt/doxygen-action@v1
       with:
-        working-directory: Projects/
-        doxyfile-path: ./Doxyfile
+        working-directory: 'Projects/'
+        doxyfile-path: './Doxyfile'
         enable-latex: true
 
-    - name: upload artifacts
+    - name: upload latex artifacts
       uses: actions/upload-artifact@v1
       with:
         name: docs
-        path: Projects
-
-    #- name: upload latex artifacts
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: docs_latex
-    #    path: '${{runner.workspace}}/Documentation/latex'
-    #
-    #- name: upload html artifacts
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: docs_html
-    #    path: '${{runner.workspace}}/Documentation/html'
+        path: Documentation
 
     #- name: deploy generated HTML
     #  uses: peaceiris/actions-gh-pages@v3
     #  with:
     #    github_token: ${{ secrets.GITHUB_TOKEN }}
-    #    publish_dir: '${{runner.workspace}}/Documentation/html'
+    #    publish_dir: Documentation/html
     #    enable_jekyll: false
     #    allow_empty_commit: false
     #    force_orphan: true
