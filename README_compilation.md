@@ -1,8 +1,59 @@
-# For developers and Linux users
+# For Developers and Linux users
 
-This directory contains the C/C++ source files in the Sources directory
-and script files to build the library using different Modelica tools,
-operating systems, and C/C++ compilers.
+This directory contains the C/C++ source files in the Sources directory and
+script files to build the library using different Modelica tools, operating
+systems, and C/C++ compilers.
+
+The heavy-lifting regarding the project configuration is done using the CMake
+file `CMakeLists.txt`, which makes the [CMake software] (https://cmake.org/)
+a prerequisite for compiling ExternalMedia.
+
+Once you have installed CMake and can access it from a command prompt, you can
+go to the root 
+
+
+
+
+cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      #env:
+      #  CXX_COMPILER: ${{ matrix.cxx_compiler }}
+      working-directory: ${{runner.workspace}}/build
+      # Note the current convention is to use the -S and -B options here to specify source 
+      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: |
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
+        
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build .
+
+    - name: Install
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install
+
+
+
+      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: |
+        cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
+        cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --config Release
+
+    - name: Install
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install --config Release
+
+
+
+
 
 
 ## BUILDING THE LIBRARY FOR DYMOLA USING MICROSOFT VISUAL STUDIO ON WINDOWS

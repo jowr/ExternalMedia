@@ -272,7 +272,7 @@ jobs:
     - name: build doxygen sources
       uses: mattnotmitt/doxygen-action@v1
       with:
-        working-directory: 'Projects/Sources/'
+        working-directory: '${{runner.workspace}}/Projects/Sources/'
         doxyfile-path: './Doxyfile'
         enable-latex: true
     - name: upload docs artifacts
