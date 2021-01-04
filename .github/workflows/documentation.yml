@@ -19,7 +19,7 @@ jobs:
       with:
         working-directory: 'Projects/'
         doxyfile-path: './Doxyfile'
-        enable-latex: false
+        enable-latex: true
 
     - name: upload latex artifacts
       uses: actions/upload-artifact@v1
