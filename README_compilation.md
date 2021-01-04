@@ -1,110 +1,68 @@
-# For Developers and Linux users
+# Compilation guide
 
-This directory contains the C/C++ source files in the Sources directory and
-script files to build the library using different Modelica tools, operating
-systems, and C/C++ compilers.
+## Quick-start guide
 
 The heavy-lifting regarding the project configuration is done using the CMake
 file `CMakeLists.txt`, which makes the [CMake software] (https://cmake.org/)
 a prerequisite for compiling ExternalMedia.
 
 Once you have installed CMake and can access it from a command prompt, you can
-go to the root 
+go to the root folder of the source code and run:
 
+```shell
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release
+```
 
-By default, the libraries are installed in a subfolder whose name is determined
+Please note that there is no typing mistake in the lines above. The current version
+of ExternalMedia requires you to run the configure step twice. Now you should have
+a working project configuration and the actual compilation can be triggered using:
+
+```shell
+cmake --build build --config Release --target install
+```
+
+By default, the libraries are installed in a subfolder with a name that is determined
 from the current operating system and the compiler, possible combinations are:
 - `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/win32/vs2015`
 - `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/win64/vs2019`
 - `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/linux64/gcc81`
+
+If you would like to skip the compiler part and make the current configuration the
+default for the platform, you can use this command below:
+
+```shell
+cmake --build build --config Release --target install-as-default
+```
 
 You can override these settings manually using the command line switches for
 `MODELICA_PLATFORM` and `MODELICA_COMPILER`. The command 
 `cmake -B build -S Projects -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=`
 would for example configure the installation folder to
 `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/mingw64`, which is the
-preferred search path for OpenModelica.
- 
+preferred search path for OpenModelica that supports side-by-side installations with
+other compilers and configuration that support other Modelica tools.
 
-cmake -E make_directory ${{runner.workspace}}/build
+## Selecting the fluid property libraries
 
-    - name: Configure CMake
-      #env:
-      #  CXX_COMPILER: ${{ matrix.cxx_compiler }}
-      working-directory: ${{runner.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: |
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
-        
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      run: cmake --build .
+You can disable and enable the FluidProp and the CoolProp integration with command
+line switches.
 
-    - name: Install
-      working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --target install
+The recommended configuration step for Windows systems is 
 
+```shell
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release -DADD_FLUIDPROP_SHARED:BOOL=ON -DADD_COOLPROP_OBJECT:BOOL=ON
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release -DADD_FLUIDPROP_SHARED:BOOL=ON -DADD_COOLPROP_OBJECT:BOOL=ON
+```
 
+... and for all other systems, you probably want to use
 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: |
-        cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
-        cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
+```shell
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release -DADD_FLUIDPROP_SHARED:BOOL=OFF -DADD_COOLPROP_OBJECT:BOOL=ON
+cmake -B build -S Projects -DCMAKE_BUILD_TYPE=Release -DADD_FLUIDPROP_SHARED:BOOL=OFF -DADD_COOLPROP_OBJECT:BOOL=ON
+```
 
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --config Release
-
-    - name: Install
-      working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --target install --config Release
-
-
-
-
-
-
-## BUILDING THE LIBRARY FOR DYMOLA USING MICROSOFT VISUAL STUDIO ON WINDOWS
-
-Run the BuildLib-Dymola-VS20XX.bat script corresponding to the version
-of Visual Studio that Dymola uses to compile the simulation executable.
-This can be done from the Windows console (cmd.exe), or just by
-double-clicking on the .bat file from the file explorer.
-
-The scripts build the static library, copies it twice to the Resources/Library
-directory of the Modelica library, once with a version- and tool-specific name,
-for archival on the SVN server, and once with the appropriate name ExternalMediaLib.lib,
-which is loaded by the Modelica tool. Note that this latter file is not stored
-as such on the SVN repo, because there are different versions of it depending
-the compiler used. Finally, it copies the externalmedia.h header file into the 
-Resources/Include directory. In this way, the library can be used right away
-by loading the main package.mo file immediately after running the compile script.
-
-For library maintenance, it is suggested that the Visual Studio binary libraries
-are updated on the SVN server when major changes or bugfixes are applied to the
-source code, so that other users can benefit without the need of recompiling them
-
-## Getting the CoolProp code and its dependencies
-
-Earlier versions of ExternalMedia included CoolProp as an external repository and 
-the checkout of the code from the SVN automatically downloaded CoolProp. This is no 
-longer possible since CoolProp 5 has external dependencies itself and there is no 
-way to connect the git submodules to ExternalMedia's SVN structure. 
-
-Before you start, be sure to have all the requirements for CoolProp installed. Follow 
-the instructions on the 
-[CoolProp homepage](http://coolprop.sourceforge.net/coolprop/wrappers/index.html#common-wrapper-prerequisites)
-before you proceed with the compilation. As soon as you have all tools in place, 
-you can start out by compiling a collection of binary object files from the CoolProp
-library. Make sure that you can access **cmake**, **git** and **python** from the command 
-line, the rest should be handled by the build script.
-
-
-## BUIDING THE LIBRARY FOR OPENMODELICA USING GCC ON WINDOWS AND LINUX
+## Building OpenModelica libraries
 
 - Get the OMDEV environment from the SVN repository:
   https://openmodelica.org/svn/OpenModelicaExternal/trunk/tools/windows/OMDev
@@ -114,21 +72,10 @@ line, the rest should be handled by the build script.
 - Start C:\OMDev\tools\msys\msys.bat (You should get a command window pop up
   that looks like the emulation of a unix prompt - because it is)
 - $ mount d:/Path_to_your_ExternalMediaLibrary_working_copy /ExternalMediaLibrary
-- $ cd /ExternalMediaLibrary/Projects
-- $ ./BuildLib-OMC-gcc.sh
+- $ cd /ExternalMediaLibrary/
+- $ cmake -B build -S Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+- $ cmake --build build --target install
  
 This will build the static gcc library and copy it and the externalmedia.h
 header files in the Resource directories of the Modelica packages, so it can
-be used right away by just loading the Modelica package in OMC
-
-## For Dymola users on Linux systems
-
-This procedure has not been tested with OpenModelica. Please report any errors
-in order to help us to improve the Linux support of ExternalMedia. 
-
-Please compile the source code using the `makefile-linux` from the console:
-- Go to the `Projects` directory: `cd Projects`
-- Compile the files: `make -f makefile header library`
-- Install the files: `make -f makefile install`
-
-You can now load the library, by opening the package.mo file
+be used right away by just loading the Modelica package in OMC.
