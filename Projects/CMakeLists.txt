@@ -31,7 +31,12 @@ else()
   set(ENABLE_MSL_HEADERS OFF)
 endif()
 
-option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" OFF)
+if(WIN32)
+  option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" ON)
+else()
+  option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" OFF)
+endif()
+
 option(ADD_COOLPROP_OBJECT "Link the CoolProp object files to ExternalMedia" ON)
 option(ADD_COOLPROP_SHARED "NOT SUPPORTED: Link the shared CoolProp library to ExternalMedia, requires CoolProp to be available in the system PATH" OFF)
 
