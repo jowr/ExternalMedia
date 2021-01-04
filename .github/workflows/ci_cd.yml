@@ -74,43 +74,48 @@ jobs:
     #    asset_name: windows.zip
     #    asset_content_type: application/zip                        
 
-  # build-macos:
-    # runs-on: macOS-latest
+  build-macos:
+    runs-on: macOS-latest
 
-    # steps:
+    steps:
 
-    # - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-    # - name: Create Build Environment
-      # run: |
-        # cmake --version
-        # cmake -E make_directory ${{runner.workspace}}/build
+    - name: Create Build Environment
+      run: |
+        cmake --version
+        cmake -E make_directory ${{runner.workspace}}/build
 
-    # - name: Configure CMake
-      # working-directory: ${{runner.workspace}}/build
-      # # Note the current convention is to use the -S and -B options here to specify source 
-      # # and build directories, but this is only available with CMake 3.13 and higher.  
-      # # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      # run: |
-      #  cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
-      #  cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
+    - name: Configure CMake
+      working-directory: ${{runner.workspace}}/build
+      # Note the current convention is to use the -S and -B options here to specify source 
+      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: |
+       cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
+       cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
 
-    # - name: Build
-      # working-directory: ${{runner.workspace}}/build
-      # run: cmake --build .
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build .
 
-    # - name: Install
-      # working-directory: ${{runner.workspace}}/build
-      # run: cmake --build . --target install
+    - name: Install
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install
 
-    # - name: zip macos artifacts
-      # run: |
-        # zip -r macos Modelica
-    # - name: upload macos artifacts
-      # uses: actions/upload-artifact@v1
-      # with:
-        # name: uploads
-        # path: macos.zip
+    #- name: zip macos artifacts
+    #  run: |
+    #    zip -r macos Modelica
+    #- name: upload macos artifacts
+    #  uses: actions/upload-artifact@v1
+    #  with:
+    #    name: uploads
+    #    path: macos.zip
+    - name: upload macos artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: binaries
+        path: Modelica
 
 
   build-linux:
@@ -261,3 +266,16 @@ jobs:
         name: binaries
         path: Modelica
 
+  build-docs:
+    steps:
+    - name: build doxygen sources
+      uses: mattnotmitt/doxygen-action@v1
+      with:
+        working-directory: 'Projects/Sources/'
+        doxyfile-path: './Doxyfile'
+        enable-latex: true
+    - name: upload docs artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: binaries
+        path: Modelica

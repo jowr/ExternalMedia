@@ -187,6 +187,7 @@ if(MODELICA_COMPILER)
   add_custom_target(install-as-default
       COMMAND ${CMAKE_COMMAND} -E echo "Copying \"Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}/\" to \"Library/${MODELICA_PLATFORM}/\""
       COMMAND ${CMAKE_COMMAND} -E copy_directory "Library/${MODELICA_PLATFORM}/${MODELICA_COMPILER}/" "Library/${MODELICA_PLATFORM}/"
+      DEPENDS install
       WORKING_DIRECTORY "${MODELICA_INSTALL_PATH}"
       COMMENT "Install the current build as default library."
   )
