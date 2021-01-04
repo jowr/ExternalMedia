@@ -1,16 +1,12 @@
 include(FetchContent)
 
 # Define the configuration variables
-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
-  set(COOLPROP_BITNESS "64")
-else()
-  set(COOLPROP_BITNESS "32")
-endif()
-
 if(NOT MSVC)
-  set(COOLPROP_FORCE_BITNESS "-DFORCE_BITNESS_${COOLPROP_BITNESS}=ON")
-else()
-  set(COOLPROP_FORCE_BITNESS "-DFORCE_BITNESS_${COOLPROP_BITNESS}=OFF")
+ if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+   set(FORCE_BITNESS_64 ON)
+ else()
+   set(FORCE_BITNESS_32 ON)
+ endif()
 endif()
 
 set(COOLPROP_OBJECT_LIBRARY ${ADD_COOLPROP_OBJECT})
