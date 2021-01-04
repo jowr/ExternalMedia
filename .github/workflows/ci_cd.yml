@@ -269,12 +269,17 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-    - name: build doxygen sources
-      uses: mattnotmitt/doxygen-action@v1
-      with:
-        working-directory: '${{runner.workspace}}/Projects/Sources/'
-        doxyfile-path: './Doxyfile'
-        enable-latex: true
+    #- name: build doxygen sources
+    #  uses: mattnotmitt/doxygen-action@v1
+    #  with:
+    #    working-directory: '${{runner.workspace}}/Projects/Sources/'
+    #    doxyfile-path: './Doxyfile'
+    #    enable-latex: true
+
+    - name: Build doxygen sources
+      working-directory: ${{runner.workspace}}/Projects/Sources/
+      run: doxygen Doxyfile
+
     - name: upload docs artifacts
       uses: actions/upload-artifact@v1
       with:
