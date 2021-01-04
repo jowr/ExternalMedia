@@ -86,7 +86,7 @@ jobs:
         cmake --version
         cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
+    - name: Configure with CMake
       working-directory: ${{runner.workspace}}/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
@@ -95,11 +95,11 @@ jobs:
        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
 
-    - name: Build
+    - name: Build with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build .
 
-    - name: Install
+    - name: Install with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --target install
 
@@ -134,7 +134,7 @@ jobs:
         cmake --version
         cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
+    - name: Configure with CMake
       #env:
       #  CXX_COMPILER: ${{ matrix.cxx_compiler }}
       working-directory: ${{runner.workspace}}/build
@@ -145,11 +145,11 @@ jobs:
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release || true
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release
         
-    - name: Build
+    - name: Build with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build .
 
-    - name: Install
+    - name: Install with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --target install
 
@@ -185,7 +185,7 @@ jobs:
         cmake --version
         cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
+    - name: Configure with CMake
       working-directory: ${{runner.workspace}}/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
@@ -194,11 +194,11 @@ jobs:
         cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
         cmake ${{ runner.workspace }}/ExternalMedia/Projects -A ${{ matrix.arch }}
 
-    - name: Build
+    - name: Build with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --config Release
 
-    - name: Install
+    - name: Install with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --target install --config Release
 
@@ -235,7 +235,7 @@ jobs:
         cmake --version
         cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
+    - name: Configure with CMake
       working-directory: ${{runner.workspace}}/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
@@ -243,12 +243,15 @@ jobs:
       run: |
         cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
         cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+      #run: |
+      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
+      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
 
-    - name: Build
+    - name: Build with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build .
 
-    - name: Install
+    - name: Install with CMake
       working-directory: ${{runner.workspace}}/build
       run: cmake --build . --target install
 
@@ -265,3 +268,52 @@ jobs:
       with:
         name: binaries
         path: Modelica
+
+  # build-mingw:
+    # runs-on: windows-latest
+    # #defaults:
+    # #  run:
+    # #    shell: msys2 {0}
+    # steps:
+    # - uses: actions/checkout@v2
+    # #- uses: msys2/setup-msys2@v2
+    # #  with:
+    # #    msystem: MINGW64
+    # #    update: true
+    # #    install: git mingw-w64-x86_64-toolchain
+
+    # - name: Create Build Environment
+      # run: |
+        # cmake --version
+        # cmake -E make_directory ${{runner.workspace}}/build
+
+    # - name: Configure with CMake
+      # working-directory: ${{runner.workspace}}/build
+      # # Note the current convention is to use the -S and -B options here to specify source 
+      # # and build directories, but this is only available with CMake 3.13 and higher.  
+      # # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      # run: |
+        # cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+        # cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+    # - name: Build with CMake
+      # working-directory: ${{runner.workspace}}/build
+      # run: cmake --build .
+
+    # - name: Install with CMake
+      # working-directory: ${{runner.workspace}}/build
+      # run: cmake --build . --target install
+
+    # #- name: zip mingw artifact
+    # #  run: |
+    # #    powershell Compress-Archive Modelica mingw.zip 
+    # #- name: upload mingw artifact
+    # #  uses: actions/upload-artifact@v1
+    # #  with:
+    # #    name: uploads
+    # #    path: mingw.zip
+    # - name: upload mingw artifacts
+      # uses: actions/upload-artifact@v1
+      # with:
+        # name: binaries
+        # path: Modelica

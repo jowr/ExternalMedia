@@ -12,7 +12,19 @@ Once you have installed CMake and can access it from a command prompt, you can
 go to the root 
 
 
+By default, the libraries are installed in a subfolder whose name is determined
+from the current operating system and the compiler, possible combinations are:
+- `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/win32/vs2015`
+- `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/win64/vs2019`
+- `Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/linux64/gcc81`
 
+You can override these settings manually using the command line switches for
+`MODELICA_PLATFORM` and `MODELICA_COMPILER`. The command 
+`cmake -B build -S Projects -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=`
+would for example configure the installation folder to
+`Modelica/ExternalMedia ${APP_VERSION}/Resources/Library/mingw64`, which is the
+preferred search path for OpenModelica.
+ 
 
 cmake -E make_directory ${{runner.workspace}}/build
 
