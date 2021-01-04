@@ -1,4 +1,4 @@
-name: Doxygen to GitHub Pages
+name: Documentation builds
 
 #on:
 #  push:

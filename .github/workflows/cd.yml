@@ -1,0 +1,59 @@
+name: Continuous Deployment
+
+#on:
+#  push:
+#    tags:
+#      - 'v*'
+
+on: [push]
+
+jobs:
+  gather-files:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Wait for documentation build
+      uses: fountainhead/action-wait-for-check@v1.0.0
+      id: wait-for-docs
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        checkName: 'finish-docs'
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        timeoutSeconds: 600
+        intervalSeconds: 10
+    - name: Documentation build failed
+      if: steps.wait-for-docs.outputs.conclusion != 'success'
+      shell: bash
+      run: |
+        echo "Error! $The documentation workflow has status of [${{steps.wait-for-docs.outputs.conclusion}}]" 1>&2
+        exit 64
+    - name: Download documentation artifacts
+      if: steps.wait-for-docs.outputs.conclusion == 'success'
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow: docs.yml
+        name: binaries
+
+    - name: Wait for Continuous Integration
+      uses: fountainhead/action-wait-for-check@v1.0.0
+      id: wait-for-build
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        checkName: 'finish-ci'
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        timeoutSeconds: 600
+        intervalSeconds: 10
+    - name: Continuous Integration failed
+      if: steps.wait-for-build.outputs.conclusion != 'success'
+      shell: bash
+      run: |
+        echo "Error! $The Continuous Integration workflow has status of [${{steps.wait-for-build.outputs.conclusion}}]" 1>&2
+        exit 64
+    - name: Download build artifacts
+      if: steps.wait-for-build.outputs.conclusion == 'success'
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow: ci.yml
+        name: binaries
