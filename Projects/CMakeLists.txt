@@ -32,7 +32,7 @@ else()
 endif()
 
 if(WIN32)
-  option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" ON)
+  option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" OFF)
 else()
   option(ADD_FLUIDPROP_SHARED "Link the shared FluidProp library to ExternalMedia, requires FluidProp to be available in the system PATH" OFF)
 endif()
