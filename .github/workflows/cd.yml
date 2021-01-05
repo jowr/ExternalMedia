@@ -42,8 +42,8 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         checkName: 'finish-ci'
         ref: ${{ github.event.pull_request.head.sha || github.sha }}
-        timeoutSeconds: 600
-        intervalSeconds: 10
+        timeoutSeconds: 3600
+        intervalSeconds: 20
     - name: Continuous Integration failed
       if: steps.wait-for-build.outputs.conclusion != 'success'
       shell: bash
