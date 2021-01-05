@@ -237,7 +237,7 @@ if(ENABLE_COOLPROP)
   endif()
   
   # This links the final ExternalMedia sources, avoids conflicts with the MSL headers
-  add_executable (coolprop_comparisons ${CMAKE_CURRENT_SOURCE_DIR}/Tests/coolprop_comparisons.cpp ${LIB_SOURCES})
+  add_executable (coolprop_comparisons EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/Tests/coolprop_comparisons.cpp ${LIB_SOURCES})
   target_compile_definitions(coolprop_comparisons PRIVATE -DMODELICA_ERRORS=0)
   target_include_directories(coolprop_comparisons PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Sources)
   if(COOLPROP_LINKER_INPUT)

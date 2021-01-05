@@ -243,37 +243,35 @@ jobs:
     - name: Create Build Environment
       run: |
         cmake --version
-        cmake -E make_directory ${{runner.workspace}}/build
-        svn checkout https://openmodelica.org/svn/OpenModelicaExternal/trunk/tools/windows/OMDev C:/OMDev
+        svn checkout -q https://openmodelica.org/svn/OpenModelicaExternal/trunk/tools/windows/OMDev C:/OMDev
 
-    - name: Configure with CMake
-      working-directory: ${{runner.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      #run: |
-      #  $env:Path += ";C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw64\bin"
-      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
-      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+    - name: Configure with CMake for 32bit
+      working-directory: ${{runner.workspace}}
+      run: |
+        $env:Path = "${env:ProgramFiles}\CMake\bin;C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw32\bin;$env:Path"
+        cmake -B build32 -S ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+        cmake -B build32 -S ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build with CMake for 32bit
+      working-directory: ${{runner.workspace}}
+      run: |
+        $env:Path = "${env:ProgramFiles}\CMake\bin;C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw32\bin;$env:Path"
+        cmake --build build32 --target ExternalMediaLib
+        cmake --build build32 --target install
+
+    - name: Configure with CMake for 64bit
+      working-directory: ${{runner.workspace}}
       run: |
         $env:Path = "${env:ProgramFiles}\CMake\bin;C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw64\bin;$env:Path"
-        cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
-        cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
-      #run: |
-      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
-      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
+        cmake -B build64 -S ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+        cmake -B build64 -S ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
 
-    - name: Build with CMake
-      working-directory: ${{runner.workspace}}/build
+    - name: Build with CMake for 64bit
+      working-directory: ${{runner.workspace}}
       run: |
         $env:Path = "${env:ProgramFiles}\CMake\bin;C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw64\bin;$env:Path"
-        cmake --build . --target ExternalMediaLib
-
-    - name: Install with CMake
-      working-directory: ${{runner.workspace}}/build
-      run: |
-        $env:Path = "${env:ProgramFiles}\CMake\bin;C:\OMDev\tools\msys\usr\bin;C:\OMDev\tools\msys\mingw64\bin;$env:Path"
-        cmake --build . --target install
+        cmake --build build64 --target ExternalMediaLib
+        cmake --build build64 --target install
 
     #- name: zip msys artifact
     #  run: |
