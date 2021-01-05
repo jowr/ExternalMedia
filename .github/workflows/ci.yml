@@ -11,7 +11,7 @@ jobs:
   finish-ci:
 
     runs-on: ubuntu-latest
-    needs: [build-macos, build-linux, build-windows, build-msys]
+    needs: [build-macos, build-linux, build-windows, build-msys-openmodelica, build-msys]
 
     steps:
     - uses: actions/download-artifact@v2
@@ -285,57 +285,58 @@ jobs:
         name: binaries
         path: Modelica
 
-  # build-msys:
-    # runs-on: windows-latest
-    # #defaults:
-    # #  run:
-    # #    shell: msys2 {0}
-    # steps:
-    # - uses: actions/checkout@v2
-    # #- uses: msys2/setup-msys2@v2
-    # #  with:
-    # #    msystem: MINGW64
-    # #    update: true
-    # #    install: git mingw-w64-x86_64-toolchain
+  build-msys:
+    runs-on: windows-latest
+    #defaults:
+    #  run:
+    #    shell: msys2 {0}
+    steps:
+    - uses: actions/checkout@v2
+    #- uses: msys2/setup-msys2@v2
+    #  with:
+    #    msystem: MINGW64
+    #    update: true
+    #    install: git mingw-w64-x86_64-toolchain
 
-    # - name: Create Build Environment
-      # run: |
-        # cmake --version
-        # cmake -E make_directory ${{runner.workspace}}/build
+    - name: Create Build Environment
+      run: |
+        cmake --version
+        cmake -E make_directory ${{runner.workspace}}/build
 
-    # - name: Configure with CMake
-      # working-directory: ${{runner.workspace}}/build
-      # # Note the current convention is to use the -S and -B options here to specify source 
-      # # and build directories, but this is only available with CMake 3.13 and higher.  
-      # # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      # run: |
-        # cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
-        # cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
-      # #run: |
-      # #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
-      # #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
+    - name: Configure with CMake
+      working-directory: ${{runner.workspace}}/build
+      # Note the current convention is to use the -S and -B options here to specify source 
+      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: |
+        cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+        cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release
+      #run: |
+      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
+      #  cmake ${{ runner.workspace }}/ExternalMedia/Projects -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DMODELICA_PLATFORM:STRING=mingw64 -DMODELICA_COMPILER:STRING=
 
-    # - name: Build with CMake
-      # working-directory: ${{runner.workspace}}/build
-      # run: cmake --build .
+    - name: Build with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build .
 
-    # - name: Install with CMake
-      # working-directory: ${{runner.workspace}}/build
-      # run: cmake --build . --target install
+    - name: Install with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install
 
-    # #- name: zip msys artifact
-    # #  run: |
-    # #    powershell Compress-Archive Modelica msys.zip 
-    # #- name: upload msys artifact
-    # #  uses: actions/upload-artifact@v1
-    # #  with:
-    # #    name: uploads
-    # #    path: msys.zip
-    # - name: upload msys artifacts
-      # uses: actions/upload-artifact@v1
-      # with:
-        # name: binaries
-        # path: Modelica
+    #- name: zip msys artifact
+    #  run: |
+    #    powershell Compress-Archive Modelica msys.zip 
+    #- name: upload msys artifact
+    #  uses: actions/upload-artifact@v1
+    #  with:
+    #    name: uploads
+    #    path: msys.zip
+
+    #- name: upload msys artifacts
+    #  uses: actions/upload-artifact@v1
+    #  with:
+    #    name: binaries
+    #    path: Modelica
 
   # build-mingw:
     # runs-on: windows-latest
