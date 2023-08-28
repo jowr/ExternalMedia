@@ -73,16 +73,11 @@ jobs:
       # Only use one build here, otherwise we cannot control which build is included in the release zip package
       # Check the use of the ${MODELICA_PLATFORM} and ${MODELICA_COMPILER} variables in the CMake files
       matrix:
-        include:
+        include :
           - platform: ubuntu-latest
-          #- platform: ubuntu-20.04
-          #- platform: ubuntu-18.04
-          - compiler: [ 
-              {cpp: g++, c: gcc}, # default GCC version
-              {cpp: clang++, c: clang}, # default clang version
-              {cpp: g++-8, c: gcc-8}, # GCC 8
-              {cpp: g++-4, c: gcc-4}, # GCC 4
-              ]
+            compiler: {cpp: g++, c: gcc} # default GCC version
+          - platform: ubuntu-latest
+            compiler: {cpp: clang++, c: clang} # default clang version
     steps:
     - uses: actions/checkout@v2
     - name: Create Build Environment
