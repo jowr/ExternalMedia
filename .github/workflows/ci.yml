@@ -80,16 +80,16 @@ jobs:
             compiler: {cpp: clang++, c: clang} # default clang version
           - platform: ubuntu-22.04
             compiler: {cpp: g++-12, c: gcc-12}
-          - platform: ubuntu-22.04
-            compiler: {cpp: g++-11, c: gcc-11}
-          - platform: ubuntu-22.04
-            compiler: {cpp: g++-10, c: gcc-10}
-          - platform: ubuntu-22.04
-            compiler: {cpp: g++-9, c: gcc-9}
+          # - platform: ubuntu-22.04
+          #   compiler: {cpp: g++-11, c: gcc-11}
+          # - platform: ubuntu-22.04
+          #   compiler: {cpp: g++-10, c: gcc-10}
+          # - platform: ubuntu-22.04
+          #   compiler: {cpp: g++-9, c: gcc-9}
           - platform: ubuntu-20.04
             compiler: {cpp: g++-8, c: gcc-8}
-          - platform: ubuntu-20.04
-            compiler: {cpp: g++-7, c: gcc-7}
+          # - platform: ubuntu-20.04
+          #   compiler: {cpp: g++-7, c: gcc-7}
     steps:
     - uses: actions/checkout@v2
     - name: Create Build Environment
