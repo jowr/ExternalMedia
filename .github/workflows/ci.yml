@@ -88,7 +88,7 @@ jobs:
         apt-get -y update
         apt-get -y --force-yes install -t wheezy-backports cmake
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Create Build Environment
       run: |
         cmake --version
@@ -96,8 +96,8 @@ jobs:
     - name: Configure with CMake
       working-directory: build
       run: |
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
+        cmake ../Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
+        cmake ../Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
     - name: Build with CMake
       working-directory: build
       run: cmake --build . --target ExternalMediaLib
@@ -119,8 +119,8 @@ jobs:
     - name: Prepare system and install CMake
       run: |
         apt-get -y update
-        apt-get -y --force-yes upgrade
-        apt-get -y --force-yes install cmake
+        apt-get -y upgrade
+        apt-get -y install cmake
 
     - uses: actions/checkout@v2
     - name: Create Build Environment
@@ -130,8 +130,8 @@ jobs:
     - name: Configure with CMake
       working-directory: build
       run: |
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
-        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
+        cmake ../Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
+        cmake ../Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
     - name: Build with CMake
       working-directory: build
       run: cmake --build . --target ExternalMediaLib
