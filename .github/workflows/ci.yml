@@ -69,6 +69,81 @@ jobs:
         path: Modelica
 
 
+  build-gcc4-linux:
+    runs-on: ubuntu-latest
+    container: gcc:4.8
+
+    steps:
+    - name: Prepare system
+      run: |
+        update-ca-certificates --fresh
+        echo "deb http://archive.debian.org/debian wheezy main" > /etc/apt/sources.list
+        echo "deb http://archive.debian.org/debian-security wheezy/updates main" >> /etc/apt/sources.list
+        apt-get -y update
+        apt-get -y --force-yes upgrade
+
+    - name: Install CMake
+      run: |
+        echo "deb http://archive.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list
+        apt-get -y update
+        apt-get -y --force-yes install -t wheezy-backports cmake
+
+    - uses: actions/checkout@v2
+    - name: Create Build Environment
+      run: |
+        cmake --version
+        cmake -E make_directory ${{runner.workspace}}/build
+    - name: Configure with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
+    - name: Build with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target ExternalMediaLib
+    - name: Install with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install
+    - name: upload linux artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: binaries
+        path: Modelica
+
+
+  build-gcc8-linux:
+    runs-on: ubuntu-latest
+    container: gcc:8 # buster is still supported
+
+    steps:
+    - name: Prepare system and install CMake
+      run: |
+        apt-get -y update
+        apt-get -y --force-yes upgrade
+        apt-get -y --force-yes install cmake
+
+    - uses: actions/checkout@v2
+    - name: Create Build Environment
+      run: |
+        cmake --version
+        cmake -E make_directory ${{runner.workspace}}/build
+    - name: Configure with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
+        cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
+    - name: Build with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target ExternalMediaLib
+    - name: Install with CMake
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --target install
+    - name: upload linux artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: binaries
+        path: Modelica
+
   build-linux:
     runs-on: ${{ matrix.platform }}
     strategy:
@@ -76,8 +151,8 @@ jobs:
       # Check the use of the ${MODELICA_PLATFORM} and ${MODELICA_COMPILER} variables in the CMake files
       matrix:
         include :
-          # - platform: ubuntu-latest
-          #   compiler: {cpp: g++, c: gcc} # default GCC version
+          - platform: ubuntu-latest
+            compiler: {cpp: g++, c: gcc} # default GCC version
           # - platform: ubuntu-latest
           #   compiler: {cpp: clang++, c: clang} # default clang version
 # 
@@ -105,9 +180,9 @@ jobs:
           # - platform: ubuntu-20.04
           #   compiler: {cpp: clang++-10, c: clang-10}
 
-          - platform: ubuntu-latest
-            compiler: {cpp: g++-4.8.5, c: gcc-4.8.5}
-            install: true
+          # - platform: ubuntu-latest
+          #   compiler: {cpp: g++-4.8.5, c: gcc-4.8.5}
+          #   install: true
 
     steps:
     - uses: actions/checkout@v2
@@ -118,7 +193,8 @@ jobs:
     - name: Install packages
       if: ${{ matrix.install }}
       run:  |
-        sudo apt-get update; sudo apt-get install -y build-essential flex
+        sudo apt-get update; sudo apt-get install -y build-essential
+        sudo apt-get remove flex # remove flex, there is a bug that keeps gmp from compiling, see https://gmplib.org/list-archives/gmp-bugs/2008-August/001114.html
         git clone git://gcc.gnu.org/git/gcc.git gcc.git; cd gcc.git; git checkout releases/${{ matrix.compiler.c }}; ./contrib/download_prerequisites; cd ..
         mkdir build; cd build; ../gcc.git/configure --prefix=/opt/${{ matrix.compiler.c }} --enable-languages=c,c++
         make; sudo make install
