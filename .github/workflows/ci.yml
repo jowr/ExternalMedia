@@ -92,17 +92,17 @@ jobs:
     - name: Create Build Environment
       run: |
         cmake --version
-        cmake -E make_directory ${{runner.workspace}}/build
+        cmake -E make_directory build
     - name: Configure with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: |
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
     - name: Build with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: cmake --build . --target ExternalMediaLib
     - name: Install with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: cmake --build . --target install
     - name: upload linux artifacts
       uses: actions/upload-artifact@v1
@@ -126,17 +126,17 @@ jobs:
     - name: Create Build Environment
       run: |
         cmake --version
-        cmake -E make_directory ${{runner.workspace}}/build
+        cmake -E make_directory build
     - name: Configure with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: |
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1 || true
         cmake ${GITHUB_WORKSPACE}/Projects -DCMAKE_BUILD_TYPE=Release -DFLUIDPROP=0 -DCOOLPROP=1
     - name: Build with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: cmake --build . --target ExternalMediaLib
     - name: Install with CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: build
       run: cmake --build . --target install
     - name: upload linux artifacts
       uses: actions/upload-artifact@v1
