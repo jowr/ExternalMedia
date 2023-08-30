@@ -82,11 +82,16 @@ jobs:
         apt-get -y update
         apt-get -y --force-yes upgrade
 
-    - name: Install CMake
-      run: |
-        echo "deb http://archive.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list
-        apt-get -y update
-        apt-get -y --force-yes install -t wheezy-backports cmake
+    # - name: Install CMake
+    #   run: |
+    #     echo "deb http://archive.debian.org/debian wheezy-backports main" >> /etc/apt/sources.list
+    #     apt-get -y update
+    #     apt-get -y --force-yes install -t wheezy-backports cmake
+
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.8.x'
 
     - uses: actions/checkout@v1
     - name: Create Build Environment
