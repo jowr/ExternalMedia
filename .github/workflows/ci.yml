@@ -83,7 +83,7 @@ jobs:
         apt-get -y --force-yes install ca-certificates
       # apt-get -y --force-yes upgrade
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
 
     # - name: Install CMake
     #   run: |
