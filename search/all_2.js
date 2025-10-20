@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['basesolver_0',['BaseSolver',['../class_base_solver.html',1,'BaseSolver'],['../class_base_solver.html#aa280098c6c3c36b5965fc9ecc76cb3e9',1,'BaseSolver::BaseSolver()']]],
-  ['beta_1',['beta',['../struct_external_thermodynamic_state.html#a45afa98e42b300370bb714d962718e33',1,'ExternalThermodynamicState::beta()'],['../class_base_solver.html#a17495e27e3127f243a3a8dc4cf95e66a',1,'BaseSolver::beta()'],['../class_cool_prop_solver.html#a8f32e983d90d37e3bb58776bae63aa45',1,'CoolPropSolver::beta()']]]
+  ['2_202023_2004_2019_0',['v3.3.2 - 2023/04/19',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md10',1,'']]],
+  ['2021_2005_2005_1',['v3.3.0 - 2021/05/05',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md12',1,'']]],
+  ['2022_2002_2017_2',['v3.3.1 - 2022/02/17',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md11',1,'']]],
+  ['2023_2004_2019_3',['2023 04 19',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md10',1,'v3.3.2 - 2023/04/19'],['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md9',1,'v4.0.0 - 2023/04/19']]],
+  ['2025_2008_2001_4',['v4.1.0 - 2025/08/01',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md8',1,'']]]
 ];

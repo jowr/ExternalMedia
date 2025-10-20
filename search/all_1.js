@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['a_0',['a',['../struct_external_thermodynamic_state.html#aadaf4b72010310dbc9be3f1f1cd6de78',1,'ExternalThermodynamicState::a()'],['../class_base_solver.html#a721528e46373d12dc2a53d1a3aa10500',1,'BaseSolver::a()'],['../class_cool_prop_solver.html#a2b782a91725467e584984a81856b2f73',1,'CoolPropSolver::a()']]],
-  ['an_20introduction_20to_20externalmedia_1',['An introduction to ExternalMedia',['../md__github_workspace__r_e_a_d_m_e_introduction.html',1,'']]]
+  ['1_200_202025_2008_2001_0',['v4.1.0 - 2025/08/01',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md8',1,'']]],
+  ['1_202022_2002_2017_1',['v3.3.1 - 2022/02/17',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md11',1,'']]],
+  ['17_2',['v3.3.1 - 2022/02/17',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md11',1,'']]],
+  ['19_3',['19',['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md10',1,'v3.3.2 - 2023/04/19'],['../md__2github_2workspace_2_r_e_a_d_m_e__changelog.html#autotoc_md9',1,'v4.0.0 - 2023/04/19']]]
 ];
